@@ -286,3 +286,81 @@ for year in years:
     plt.grid(True)
     plt.tight_layout()
     plt.show()
+
+# In[ ] Vaccination Data
+
+# Create a Dataframe
+df3 = pd.DataFrame()
+
+# Specify the column names to copy
+columns_to_copy = ['date', 'state', 'vaccinated', 'vaccinated_second', 'vaccinated_single', 'vaccinated_third']
+
+# Copy columns from source_df to destination_df
+df3 = df2[columns_to_copy].copy()
+
+# Remove rows where 'state' column is 'TOTAL'
+df3 = df3.dropna()
+
+# List of states
+states = ['AC', 'AL', 'AP', 'AM', 'BA', 
+          'CE', 'ES', 'GO', 'MA', 'MT', 
+          'MS', 'MG', 'PA', 'PB', 'PR', 
+          'PE', 'PI', 'RJ', 'RN', 'RS', 
+          'RO', 'RR', 'SC', 'SP', 'SE', 
+          'TO', 'DF']
+
+# Create a dictionary to store state groups
+state_groups = {}
+
+# Group the data by state
+for state in states:
+    state_group = df3[df3['state'] == state]
+    state_max = df3[df3['state'] == state].max()
+    state_groups[state] = state_max
+    
+# Create a DataFrame from the dictionary
+df4 = pd.DataFrame.from_dict(state_groups, orient='index')
+
+# Reset the index to numbers
+df4.reset_index(level=0, inplace=True)
+
+# Filter out rows where values in 'column_name' are greater than 10^5
+df_vacc = df4[2:]
+
+# In[ ] Plotting the Vaccinated Chart
+
+# Set the first column as the x-axis for all charts
+x_values = df_vacc['state']
+
+# Plot a chart for each column except the first one
+for column in df_vacc.columns[3:]:
+    plt.figure(figsize=(8, 6))
+    sns.barplot(x=x_values, y=df_vacc[column])
+    plt.title(f'{column}')
+    plt.xlabel('States')
+    plt.ylabel(f'{column}')
+    plt.xticks(rotation=45)
+    plt.show()
+    
+# In[ ] Plotting the Vaccinated through time
+
+# Group by month and aggregate other columns by sum
+grouped_df3 = df3.groupby(df3['date'].dt.to_period('Y')).agg('max')
+
+plt.figure(figsize=(8, 6))
+sns.barplot(x=grouped_df3.index, y=grouped_df3['vaccinated'])
+plt.title('Vaccinated by year')
+plt.xlabel('States')
+plt.ylabel('Vaccinated')
+plt.xticks(rotation=45)
+plt.show()
+
+# In[ ] Vaccinated statistics
+
+br_pop = 159.2*(10**6)
+vac_total = grouped_df3['vaccinated'].sum()
+
+# Percentual of vaccinated
+vac_perc = (vac_total/br_pop)*100
+
+print(str(vac_perc) + " %")
