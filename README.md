@@ -1,7 +1,7 @@
 ---
 # COVID-19 Data Analysis and Visualization
 
-This Python script performs data analysis and visualization of COVID-19 data in Brazil using various libraries, including Pandas, Geopandas, Matplotlib, Squarify, and Seaborn. The script generates data-driven graphs and figures to analyze the COVID-19 situation in Brazil.
+This Python script performs data analysis and visualization of COVID-19 data in Brazil using various libraries, including Pandas, Geopandas, Matplotlib, Squarify, and Seaborn. The script generates data-driven graphs and figures to analyze the COVID-19 situation in Brazil. The script was written by @diguitarrista for demonstration purposes and is not intended for commercial or academic use.
 
 ## Prerequisites
 
