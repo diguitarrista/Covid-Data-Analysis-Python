@@ -121,6 +121,7 @@ for state in df_by_state['State Names']:
 # Group the DataFrame by 'Region' and sum the values for each column
 df_by_region_grouped = df_by_region.groupby('Region').sum().reset_index()
 
+
 # In[ ] Data Visualization Barchart
 
 # Set the first column as the x-axis for all charts
@@ -242,7 +243,7 @@ df2 = df2.drop(columns_to_remove, axis=1)
 df2 = df2[df2['state'] != 'TOTAL']
 
 # Group by month and aggregate other columns by sum
-grouped = df2.groupby(df2['date'].dt.to_period('M')).agg('sum')
+grouped_df2 = df2.groupby(df2['date'].dt.to_period('M')).agg('sum')
 
 
 # In[ ] Plotting the charts
@@ -364,3 +365,23 @@ vac_total = grouped_df3['vaccinated'].sum()
 vac_perc = (vac_total/br_pop)*100
 
 print(str(vac_perc) + " %")
+
+# In[ ] Plotting Vaccinated by year
+
+# Filter rows for the years 2020, 2021, 2022
+years = [2020, 2021, 2022]
+filtered_df2 = df2[df2['date'].dt.year.isin(years)]
+
+# Group by year and plot for each year
+for year in years:
+    year_data = filtered_df2[filtered_df2['date'].dt.year == year]
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(year_data['date'], year_data['vaccinated'], marker='o')
+    plt.title(f'New Vaccinated in {year}')
+    plt.xlabel('Date')
+    plt.ylabel('Vaccinated')
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
